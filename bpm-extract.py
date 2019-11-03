@@ -15,9 +15,9 @@ def extractAudioData(datafile):
             if i == 0:
                 bpm = float(line.split()[0])
             elif line.split(':')[0] == 'QUIET':
-                quiet.append(line.split(':')[1])
+                quiet.append(float(line.split(':')[1].strip()))
             elif line.split(':')[0] == 'NOISY':
-                noisy.append(line.split(':')[1])
+                noisy.append(float(line.split(':')[1].strip()))
             else:
                 beats.append(float(line.strip()))
             i += 1
@@ -38,4 +38,4 @@ if __name__ == "__main__":
     outputfile = "audio-data.txt"
     analyzeAudiofile(audiofile, outputfile)
     bpm, beats, quiet, noisy = extractAudioData(outputfile)
-    print(bpm)
+    print(quiet)
