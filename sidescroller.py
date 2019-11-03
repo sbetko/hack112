@@ -2,6 +2,7 @@ import random, math, copy
 import numpy as np
 import pygame
 import sys
+from bpmextract import *
 pygame.init()
 
 screenWidth = 0
@@ -125,14 +126,22 @@ class Block(object):
         w = h = self.h
         pygame.draw.rect(screen, self.color, (cx, cy, w, h))
 
+
 class Level(object):
     def __init__(self, width, height, bpm):
         self.width = width
         self.height = height
         self.bpm = bpm
         #self.blocks = [Block(2000, height //2, (255, 0, 0))]
-        self.blocks = [Block(i, height // 2, (255, 0, 0)) for i in range(2000, width, 100000 // bpm)]
-    
+        self.blocks = []
+        analyzeAudioFile()
+        (self.bpm, self.beats, self.quiet, self.noisy) = extractAudioData("audio-data.txt")
+        
+        for beatTimeIndex in range(len(self.beats)):
+            if beatTimeIndex % 4 == 0:
+                beatTime = self.beats[beatTimeIndex]
+                self.blocks.append(Block(1000*beatTime + screen.get_width()//2, screen.get_height()//2, (255,0,0)))
+
     def draw(self, screen, scrollX):
         for block in self.blocks:
             block.draw(screen, scrollX)
