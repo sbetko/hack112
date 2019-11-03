@@ -92,14 +92,16 @@ while running:
             running = False
 
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_RIGHT]:
-        scrollX += me.vel
-    if keys[pygame.K_LEFT]:
-        scrollX -= me.vel
+    # if keys[pygame.K_RIGHT]:
+    #     scrollX += me.vel
+    # if keys[pygame.K_LEFT]:
+    #     scrollX -= me.vel
     if keys[pygame.K_SPACE]:
         me.jump()
-
+    
+    scrollX += me.vel
     me.doPhysics()
+    
 
     screen.fill((0, 0, 0))
     background0.draw(screen, scrollX*.8)
