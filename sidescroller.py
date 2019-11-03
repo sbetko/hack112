@@ -1,6 +1,7 @@
 import random, math, copy
 import numpy as np
 import pygame
+import sys
 pygame.init()
 
 screenWidth = 0
@@ -9,6 +10,11 @@ screenHeight = 0
 screen = pygame.display.set_mode((screenWidth, screenHeight), pygame.RESIZABLE)
 
 pygame.display.set_caption("First Game")
+
+
+directory = str(sys.path[0]) + '/Audio.ogg'
+pygame.mixer.music.load(directory)
+
 
 class Player(object):
     def __init__(self, width, height, color):
@@ -82,6 +88,7 @@ background0 = Background(screen.get_width()*4, screen.get_height())
 background1 = Background(screen.get_width()*4, screen.get_height())
 
 running = True
+pygame.mixer.music.play()
 while running:
 
     pygame.time.delay(27)
