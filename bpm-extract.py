@@ -1,17 +1,41 @@
 import os
 
-audiofile = "audio/joachim.mp3"
-os.system(f"aubio tempo {audiofile} > audio-data.txt")
-os.system(f"aubio beat {audiofile} >> audio-data.txt")
-i = 0
-beats = list()
-with open("audio-data.txt") as f:
-    for line in f.readlines():
-        if i == 0:
-            bpm = float(line.split()[0])
-        else:
-            beats.append(float(line.strip()))
-        i += 1
+def analyzeAudiofile(audiofile, outputfile):
+    analyzeTempo(audiofile, outputfile)
+    analyzeBeatPositions(audiofile, outputfile)
+    analyzeQuietPositions(audiofile, outputfile)
+    
+def extractAudioData(datafile):
+    i = 0
+    beats = list()
+    quiet = list()
+    noisy = list()
+    with open(datafile) as f:
+        for line in f.readlines():
+            if i == 0:
+                bpm = float(line.split()[0])
+            elif line.split(':')[0] == 'QUIET':
+                quiet.append(line.split(':')[1])
+            elif line.split(':')[0] == 'NOISY':
+                noisy.append(line.split(':')[1])
+            else:
+                beats.append(float(line.strip()))
+            i += 1
 
-print(bpm)
-print(beats)
+    return bpm, beats, quiet, noisy
+
+def analyzeTempo(audiofile, outputfile):
+    os.system(f"aubio tempo {audiofile} > {outputfile}")
+
+def analyzeBeatPositions(audiofile, outputfile):
+    os.system(f"aubio beat {audiofile} >> {outputfile}")
+
+def analyzeQuietPositions(audiofile, outputfile):
+    os.system(f"aubio quiet {audiofile} >> {outputfile}")
+
+if __name__ == "__main__":
+    audiofile = "audio/joachim.mp3"
+    outputfile = "audio-data.txt"
+    analyzeAudiofile(audiofile, outputfile)
+    bpm, beats, quiet, noisy = extractAudioData(outputfile)
+    print(bpm)
