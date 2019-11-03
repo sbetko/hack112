@@ -69,6 +69,38 @@ class Background(object):
             dot.x = dot.x - scrollX
             dot.draw(screen)
 
+class Block(object):
+    def __init__(self, x, y, color):
+        self.x = x
+        self.y = y
+        self.color = color
+        self.h = 5
+    
+    def getBounds(self, scrollX = None):
+        x0 = self.x
+        y0 = self.y
+        x1 = x0 + self.h
+        y1 = y0 + self.h
+        if scrollX == None:
+            return (x0, y0, x1, y1)
+        else:
+            return (x0 - scrollX, y1 - scrollX, x1 - scrollX, y1 - scrollX)
+
+    def draw(self, screen, scrollX):
+        pygame.draw.rect(screen, self.color, self.getBounds(scrollX = scrollX))
+
+class Level(object):
+    def __init__(self, width, height, bpm):
+        self.width = width
+        self.height = height
+        self.bpm = bpm
+        self.blocks = [Block(100, 100, (255, 0, 0))]
+        #self.blocks = [Block(i, height//2, (255, 0, 0)) for i in range(50, 1000, 200)]
+    
+    def draw(self, screen, scrollX):
+        for block in self.blocks:
+            block.draw(screen, scrollX)
+
 ##########################################
 # MAIN ###################################
 ##########################################
@@ -80,6 +112,7 @@ me = Player(50, 50, randomColor())
 # could take list of colors
 background0 = Background(screen.get_width()*4, screen.get_height())
 background1 = Background(screen.get_width()*4, screen.get_height())
+level = Level(screen.get_width()*4, screen.get_height(), 110)
 
 running = True
 while running:
@@ -107,6 +140,7 @@ while running:
     background0.draw(screen, scrollX*.8)
     me.draw(screen)
     background1.draw(screen, scrollX)
+    level.draw(screen, scrollX)
     pygame.display.update()
 
 pygame.quit()
