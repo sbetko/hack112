@@ -16,12 +16,27 @@ class Player(object):
         self.height = height
         self.color = color
         self.vel = 20
-        self.y = 0
+        self.y = screen.get_height()/2
+        self.x = screen.get_width()/2
         self.jumping = False
+        self.dy = 0
+
+    def jump(self):
+        if self.jumping == False:
+            self.jumping = True
+            self.dy = -30
+
+    def doPhysics(self):
+        if self.jumping == True:
+            self.y += self.dy
+            self.dy += 3
+        if self.y >= screen.get_height()/2:
+            self.jumping = False
+            self.y = screen.get_height()/2
 
     def draw(self, screen):
-        cx = screen.get_width()/2 - self.width/2
-        cy = screen.get_height()/2 - self.height/2
+        cx = self.x- self.width/2
+        cy = self.y - self.height/2
         pygame.draw.rect(screen, self.color, (cx, cy, self.width, self.height))
 
 class Dot(object):
@@ -81,6 +96,10 @@ while running:
         scrollX += me.vel
     if keys[pygame.K_LEFT]:
         scrollX -= me.vel
+    if keys[pygame.K_SPACE]:
+        me.jump()
+
+    me.doPhysics()
 
     screen.fill((0, 0, 0))
     background0.draw(screen, scrollX*.8)
